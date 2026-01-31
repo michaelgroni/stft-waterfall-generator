@@ -1,16 +1,4 @@
-def falseColorScreen(gray):
-    '''
-    Convenience function, returns falseColor(gray, [ [0, 0, 24], [128, 128, 255], [0, 255, 0], [255, 0, 0] ]).
-    '''
-    return falseColor(gray, [ [0, 0, 24], [64, 64 , 255], [150, 150, 255], [255, 255, 255], [255, 255, 0] ])
-    
-    
-def falseColorPrint(gray):
-    '''
-    Convenience function, returns falseColor(gray, [ [255, 255, 255], [128, 128, 128], [64 , 64, 64], [128, 64, 0], [192, 0, 0] ]).
-    '''
-    return falseColor(gray, [ [255, 255, 255], [128, 128, 128], [64 , 64, 64], [128, 64, 0], [192, 0, 0] ])
-
+from typing import List, Tuple
 
 def falseColor(gray, colors):
     '''
@@ -57,3 +45,27 @@ def falseColor(gray, colors):
     rgb.append(blue.to_bytes(1, byteorder='big')[0])
     
     return rgb.copy();
+
+
+# --- Fast path: 256-entry lookup table (LUT) for screen colors ---
+
+SCREEN_COLORS: List[Tuple[int, int, int]] = [
+    (0, 0, 24),
+    (64, 64, 255),
+    (150, 150, 255),
+    (255, 255, 255),
+    (255, 255, 0),
+]
+
+_FALSECOLORSCREEN_LUT = [falseColor(i, SCREEN_COLORS) for i in range(256)]
+
+def falseColorScreen(gray) -> bytearray:
+    """
+    Fast gray->RGB mapping using a precomputed LUT.
+    Returns a bytearray of length 3.
+    """
+    if gray < 0 or gray > 255:
+        raise ValueError(f"Gray must be between 0 and 255. The value of gray was {gray}")
+
+    # return _FALSECOLORSCREEN_LUT[int(gray)].copy()
+    return _FALSECOLORSCREEN_LUT[int(gray)]
