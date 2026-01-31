@@ -70,5 +70,4 @@ def falseColorScreen(gray) -> bytearray:
     if gray < 0 or gray > 255:
         raise ValueError(f"Gray must be between 0 and 255. The value of gray was {gray}")
 
-    # return _FALSECOLORSCREEN_LUT[int(gray)].copy()
     return _FALSECOLORSCREEN_LUT[int(gray)]
