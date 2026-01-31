@@ -57,7 +57,10 @@ SCREEN_COLORS: List[Tuple[int, int, int]] = [
     (255, 255, 0),
 ]
 
-_FALSECOLORSCREEN_LUT = [falseColor(i, SCREEN_COLORS) for i in range(256)]
+_FALSECOLORSCREEN_LUT = [
+    bytes(falseColor(i, SCREEN_COLORS)) for i in range(256)
+]
+
 
 def falseColorScreen(gray) -> bytearray:
     """
