@@ -56,15 +56,11 @@ class WaterfallGenerator:
 
         # False color mapping to RGB
         dataRgb = bytearray(3 * f_size * t_size)
-        idx = 0
-        for row in data:
-            for cell in row:
-                v = min(cell * 255.0 / self.dynamic_db + 255.0, 255.0)
-                r, g, b = falseColorScreen(v)
-                dataRgb[idx] = r
-                dataRgb[idx + 1] = g
-                dataRgb[idx + 2] = b
-                idx += 3
+        i = 0
+        for cell in data.flat:
+            v = min(cell * 255.0 / self.dynamic_db + 255.0, 255.0)
+            dataRgb[i:i+3] = falseColorScreen(v)
+            i += 3
 
         img = Image.frombytes("RGB", (f_size, t_size), bytes(dataRgb))
         return img
